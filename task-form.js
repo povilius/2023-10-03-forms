@@ -2,15 +2,7 @@ function init() {
   const studentForm = document.querySelector('#student-form')
   const studentsList = document.querySelector('#students-list')
 
-  const itNum = document.querySelector('.rangewrapper')
-  
-  const output = document.createElement(`span`)
- 
-  itNum.append(output)
-
-  itNum.addEventListener(`input`, function(event) {
-    output.textContent = event.target.value
-  })
+  itKnowledgeChange()
 
   studentForm.addEventListener('submit', function(event) {
     event.preventDefault()
@@ -38,10 +30,10 @@ function init() {
     ageElement.textContent = `Age: ${age}`
 
     const phoneElement = document.createElement('p')
-    phoneElement.textContent = `Phone: ${phone}`
+    phoneElement.textContent = `Phone: ****`
 
     const emailElement = document.createElement('p')
-    emailElement.textContent = `Email: ${email}`
+    emailElement.textContent = `Email: ****`
 
     const itKnowledgeElement = document.createElement('p')
     itKnowledgeElement.textContent = `IT Knowledge: ${itKnowledge}`
@@ -63,26 +55,63 @@ function init() {
       interestsList.append(interestItem)
     }
 
-    function taskDone() {
-      const created = document.createElement(`span`)
-      created.textContent = `Student with ${name} ${surname} was created`
-      created.style.color = `green`
-      studentForm.append(created)
-
-      setTimeout(function() {
-        created.remove()
-      }, 5000)
-    } 
-
-    taskDone()
-
     interestsWrapper.append(interestsTitle, interestsList)
+
+    const privateInfoButton = document.createElement('button')
+    privateInfoButton.textContent = 'Show private info'
+
+    let showPrivateInfo = false
+
+    privateInfoButton.addEventListener('click', function() {
+      showPrivateInfo = !showPrivateInfo
+
+      if (showPrivateInfo) {
+        privateInfoButton.textContent = 'Hide private info'
+        phoneElement.textContent = `Phone: ${phone}`
+        emailElement.textContent = `Email: ${email}`
+      } else {
+        privateInfoButton.textContent = 'Show private info'
+        phoneElement.textContent = `Phone: ****`
+        emailElement.textContent = `Email: ****`
+      }
+    })
+
+    const removeStudentButton = document.createElement(`button`)
+    removeStudentButton.textContent = `Remove Student`
+
+    removeStudentButton.addEventListener(`click`, function() {
+      studentItem.remove()
+
+      alertMessage(`Student ${name} ${surname} was removed`)
+    })
     
-    studentItem.append(nameElement, ageElement, phoneElement, emailElement, itKnowledgeElement, groupElement, interestsWrapper)
+    studentItem.append(nameElement, ageElement, phoneElement, emailElement, itKnowledgeElement, groupElement, interestsWrapper, privateInfoButton, removeStudentButton)
     studentsList.prepend(studentItem)
 
     form.reset()
+
+    const createStudentText = `Student ${name} ${surname} was created`
+    alertMessage(createStudentText)
   })
 }
 
 init()
+
+function itKnowledgeChange() {
+  const itKnowledgeInput = document.querySelector('#it-knowledge')
+  const itKnowledgeOutput = document.querySelector('#it-knowledge-output')
+
+  itKnowledgeInput.addEventListener('input', function() {
+    itKnowledgeOutput.textContent = itKnowledgeInput.value
+  })
+}
+
+function alertMessage(text) {
+  const alertMessage = document.querySelector(`#alert`)
+
+  alertMessage.textContent = text
+
+  setTimeout(function() {
+    alertMessage.textContent = ``
+  }, 5000)
+}
